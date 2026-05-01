@@ -1,13 +1,13 @@
 name: CI/CD Pipeline
 
 concurrency:
-  group: library-management-production
+  group: parcel-delivery-system-production
   cancel-in-progress: true
 
 on:
   push:
     branches:
-      - main
+      # - main
   workflow_dispatch:
 
 jobs:
