@@ -7,7 +7,7 @@ concurrency:
 on:
   push:
     branches:
-      # - main
+      - main
   workflow_dispatch:
 
 jobs:
@@ -36,7 +36,7 @@ jobs:
           context: ./backend
           file: ./backend/Dockerfile.prod
           push: true
-          tags: ghcr.io/${{ steps.owner.outputs.owner }}/library-backend:latest
+          tags: ghcr.io/${{ steps.owner.outputs.owner }}/parcel-backend:latest
 
       # 🎨 Frontend build
       - name: Build & Push Frontend
@@ -45,7 +45,7 @@ jobs:
           context: ./frontend
           file: ./frontend/Dockerfile.prod
           push: true
-          tags: ghcr.io/${{ steps.owner.outputs.owner }}/library-frontend:latest
+          tags: ghcr.io/${{ steps.owner.outputs.owner }}/parcel-frontend:latest
           build-args: |
             VITE_BASE_URL=${{ secrets.VITE_BASE_URL }}
             VITE_ALLOWED_HOSTS=${{ secrets.VITE_ALLOWED_HOSTS }}
@@ -57,8 +57,8 @@ jobs:
           username: ${{ secrets.HOST_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            sudo mkdir -p /opt/library-management
-            sudo chown -R $USER:$USER /opt/library-management
+            sudo mkdir -p /opt/parcel-management
+            sudo chown -R $USER:$USER /opt/parcel-management
 
       - name: Upload env file
         uses: appleboy/ssh-action@v1.0.3
@@ -67,8 +67,8 @@ jobs:
           username: ${{ secrets.HOST_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            echo "${{ secrets.ENV_PRODUCTION }}" > /opt/library-management/.env.production
-            chmod 600 /opt/library-management/.env.production
+            echo "${{ secrets.ENV_PRODUCTION }}" > /opt/parcel-management/.env.production
+            chmod 600 /opt/parcel-management/.env.production
 
       - name: Copy docker-compose
         uses: appleboy/scp-action@v0.1.4
@@ -77,7 +77,7 @@ jobs:
           username: ${{ secrets.HOST_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           source: "./docker-compose.production.yml"
-          target: /opt/library-management
+          target: /opt/parcel-management
           strip_components: 0
 
       - name: Deploy App
@@ -90,7 +90,7 @@ jobs:
           script: |
             set -e
 
-            cd /opt/library-management
+            cd /opt/parcel-management
 
             echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 

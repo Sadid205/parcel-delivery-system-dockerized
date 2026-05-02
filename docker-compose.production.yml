@@ -1,17 +1,15 @@
-version: "3.9"
-
 services:
-  library-backend:
-    image: ghcr.io/sadid205/library-backend:latest
+  parcel-backend:
+    image: ghcr.io/sadid205/parcel-backend:latest
     ports:
       - "5000:5000"
     env_file:
       - ./.env.production
     depends_on:
-      - library-mongodb
+      - parcel-mongodb
     restart: unless-stopped
     networks:
-      - library-network
+      - parcel-network
 
     deploy:
       resources:
@@ -19,22 +17,22 @@ services:
           memory: 1G
         reservations:
           memory: 400M
-  library-frontend:
-    image: ghcr.io/sadid205/library-frontend:latest
+  parcel-frontend:
+    image: ghcr.io/sadid205/parcel-frontend:latest
     ports:
-      - "4175:80"
+      - "4176:80"
     depends_on:
-      - library-backend
+      - parcel-backend
     restart: unless-stopped
     networks:
-      - library-network
+      - parcel-network
     deploy:
       resources:
         limits:
           memory: 1G
         reservations:
           memory: 400M
-  library-mongodb:
+  parcel-mongodb:
     image: mongo:7
     ports:
       - "27017:27017"
@@ -44,7 +42,7 @@ services:
       - ./.env.production
     restart: unless-stopped
     networks:
-      - library-network
+      - parcel-network
 
     deploy:
       resources:
@@ -57,5 +55,5 @@ volumes:
   mongo_data:
 
 networks:
-  library-network:
+  parcel-network:
     driver: bridge
