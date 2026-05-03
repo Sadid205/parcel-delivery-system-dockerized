@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   parcel-backend:
     build:
@@ -20,6 +18,8 @@ services:
     depends_on:
       - parcel-mongodb
     restart: unless-stopped
+    networks:
+      - parcel-network
 
   parcel-frontend:
     build:
@@ -37,6 +37,8 @@ services:
     depends_on:
       - parcel-backend
     restart: unless-stopped
+    networks:
+      - parcel-network
 
   parcel-mongodb:
     image: mongo:7
@@ -48,6 +50,8 @@ services:
     env_file:
       - ./.env.dev
     restart: unless-stopped
+    networks:
+      - parcel-network
   parcel-redis:
     image: redis:7-alpine
     container_name: parcel_redis
@@ -59,7 +63,13 @@ services:
       - ./.env.dev
     restart: unless-stopped
     command: ["redis-server", "--appendonly", "yes"]
+    networks:
+      - parcel-network
 
 volumes:
   mongo_data:
   redis_data:
+
+networks:
+  parcel-network:
+    driver: bridge

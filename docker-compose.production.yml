@@ -64,6 +64,8 @@ services:
       - ./.env.production
     restart: unless-stopped
     command: ["redis-server", "--appendonly", "yes"]
+    networks:
+      - parcel-network
 
 volumes:
   mongo_data:
