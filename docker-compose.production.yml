@@ -2,7 +2,7 @@ services:
   parcel-backend:
     image: ghcr.io/sadid205/parcel-backend:latest
     ports:
-      - "5000:5000"
+      - "5001:5000"
     env_file:
       - ./.env.production
     depends_on:
@@ -35,7 +35,7 @@ services:
   parcel-mongodb:
     image: mongo:7
     ports:
-      - "27018:27017"
+      - "27017"
     volumes:
       - mongo_data:/data/db
     env_file:
@@ -54,11 +54,11 @@ services:
     image: redis:7-alpine
     container_name: parcel_redis
     ports:
-      - "6380:6379"
+      - "6379"
     volumes:
       - redis_data:/data
     env_file:
-      - ./.env.dev
+      - ./.env.production
     restart: unless-stopped
     command: ["redis-server", "--appendonly", "yes"]
 
